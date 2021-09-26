@@ -1,7 +1,8 @@
 import classes
 
 if __name__ == '__main__':
-    game_board = classes.GameBoard()
-    game_board.generate_board()
-    for item in game_board.board:
-        print(item)
+    pieces = classes.generate_pieces()
+    board = classes.generate_board(pieces)
+    game = classes.Game(board)
+    game.create_piece_dictionary(pieces)
+    print(game.piece_dictionary)
