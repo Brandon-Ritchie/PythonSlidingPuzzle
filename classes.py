@@ -1,49 +1,3 @@
-import random
-
-def generate_list_of_num():
-    list_of_num = []
-    
-    while len(list_of_num) < 15:
-        random_num = random.randint(1, 15)
-        if random_num not in list_of_num:
-            list_of_num.append(random_num)
-        
-    return list_of_num
-
-def generate_pieces():
-    list_of_num_for_pieces = generate_list_of_num()
-
-    pieces = []
-
-    for i in range(0,4):
-        for j in range(0, 4):
-            if len(list_of_num_for_pieces) == 0:
-                pieces.append(GamePiece(' ', (i, j)))
-            else:
-                pieces.append(GamePiece(list_of_num_for_pieces[0], (i, j)))
-                list_of_num_for_pieces.pop(0)
-
-    return pieces
-
-def generate_board(pieces):
-
-    list_of_pieces = []
-
-    for piece in pieces:
-        list_of_pieces.append(piece)
-
-    board = [[], [], [], []]
-
-    for i in range(0,4):
-        for j in range(0, 4):
-            if len(list_of_pieces) == 0:
-                break
-            else:
-                board[i].append(list_of_pieces[0])
-                list_of_pieces.pop(0)
-    
-    return board
-
 class Game():
 
     def __init__(self, board):
@@ -71,10 +25,23 @@ class Game():
         for piece in pieces:
             self.piece_dictionary[piece.num] = piece.position
 
-    def move_piece(self, piece):
-        pass
+    def move_piece(self, piece, open_piece):
+        piece_position = piece.position
+        open_space_position = open_piece.position
+        if piece_position[0] == open_space_position[0]:
+            if piece_position[1] -1 == open_space_position[1]:
+                return 'Open space is to the left'
+            elif piece_position[1] + 1 == open_space_position[1]:
+                return 'Open space is to the right'
+        elif piece_position[1] == open_space_position[1]:
+            if piece_position[0] - 1 == open_space_position[0]:
+                return 'Open space is above'
+            elif piece_position[0] + 1 == open_space_position[0]:
+                return 'Open space is below'
+        else:
+            return 'Piece is not next to open space'
 
-    
+
 
 class GamePiece():
 
