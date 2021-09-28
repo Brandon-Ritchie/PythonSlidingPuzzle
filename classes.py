@@ -25,23 +25,34 @@ class Game():
         for piece in pieces:
             self.piece_dictionary[piece.num] = piece.position
 
-    def move_piece(self, piece, open_piece):
-        piece_position = piece.position
-        open_space_position = open_piece.position
-        if piece_position[0] == open_space_position[0]:
-            if piece_position[1] -1 == open_space_position[1]:
-                return 'Open space is to the left'
-            elif piece_position[1] + 1 == open_space_position[1]:
-                return 'Open space is to the right'
-        elif piece_position[1] == open_space_position[1]:
-            if piece_position[0] - 1 == open_space_position[0]:
-                return 'Open space is above'
-            elif piece_position[0] + 1 == open_space_position[0]:
-                return 'Open space is below'
+    def find_open_space_direction(self, piece):
+        open_space_position = self.piece_dictionary[' ']
+        if piece.position[0] == open_space_position[0]:
+            if piece.position[1] -1 == open_space_position[1]:
+                return 'Left'
+            elif piece.position[1] + 1 == open_space_position[1]:
+                return 'Right'
+        elif piece.position[1] == open_space_position[1]:
+            if piece.position[0] - 1 == open_space_position[0]:
+                return 'Above'
+            elif piece.position[0] + 1 == open_space_position[0]:
+                return 'Below'
         else:
-            return 'Piece is not next to open space'
+            return 'Too Far'
 
-
+    def move_piece(self, piece):
+        open_space_direction = self.find_open_space_direction(piece)
+        if open_space_direction != 'Too Far':
+            temp_open_space_position = self.piece_dictionary[' ']
+            self.piece_dictionary[' '] = piece.position
+            self.piece_dictionary[piece] = temp_open_space_position
+            self.update_board()
+        
+    def update_board(self):
+        for key, value in self.piece_dictionary.items():
+            piece_row_value = value[0]
+            piece_column_value = value[1]
+            self.board[piece_row_value][piece_column_value] = key
 
 class GamePiece():
 
