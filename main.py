@@ -49,7 +49,6 @@ if __name__ == '__main__':
             print('Choose the column of the piece you want to move:')
             chosen_column = input()
             
-
             try:
                 chosen_piece = game.board[int(chosen_row) - 1][int(chosen_column) - 1]
 
