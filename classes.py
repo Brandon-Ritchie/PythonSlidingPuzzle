@@ -1,8 +1,5 @@
 class Game():
 
-    def __init__(self, board):
-        self._board = board
-
     @property
     def board(self):
         return self._board
@@ -27,32 +24,66 @@ class Game():
 
     def find_open_space_direction(self, piece):
         open_space_position = self.piece_dictionary[' ']
-        if piece.position[0] == open_space_position[0]:
-            if piece.position[1] -1 == open_space_position[1]:
+        piece_position = self.piece_dictionary[piece.num]
+        if piece_position[0] == open_space_position[0]:
+            if piece_position[1] -1 == open_space_position[1]:
                 return 'Left'
-            elif piece.position[1] + 1 == open_space_position[1]:
+            elif piece_position[1] + 1 == open_space_position[1]:
                 return 'Right'
-        elif piece.position[1] == open_space_position[1]:
-            if piece.position[0] - 1 == open_space_position[0]:
+        elif piece_position[1] == open_space_position[1]:
+            if piece_position[0] - 1 == open_space_position[0]:
                 return 'Above'
-            elif piece.position[0] + 1 == open_space_position[0]:
+            elif piece_position[0] + 1 == open_space_position[0]:
                 return 'Below'
         else:
             return 'Too Far'
 
     def move_piece(self, piece):
         open_space_direction = self.find_open_space_direction(piece)
+        temp_open_space_position = self.piece_dictionary[' ']
+        piece_position = self.piece_dictionary[piece.num]
         if open_space_direction != 'Too Far':
-            temp_open_space_position = self.piece_dictionary[' ']
-            self.piece_dictionary[' '] = piece.position
-            self.piece_dictionary[piece] = temp_open_space_position
-            self.update_board()
-        
-    def update_board(self):
+            self.piece_dictionary[' '] = piece_position
+            self.piece_dictionary[piece.num] = temp_open_space_position
+        else:
+            print('That piece is not next to the open space. Please choose a different piece.')
+    
+    def generate_board(self, pieces):
+
+        list_of_pieces = []
+
+        for piece in pieces:
+            list_of_pieces.append(piece)
+
+        self.board = [[], [], [], []]
+
+        for i in range(0,4):
+            for j in range(0, 4):
+                if len(list_of_pieces) == 0:
+                    break
+                else:
+                    self.board[i].append(list_of_pieces[0])
+                    list_of_pieces.pop(0)
+
+    def update_board(self, pieces):
+
         for key, value in self.piece_dictionary.items():
-            piece_row_value = value[0]
-            piece_column_value = value[1]
-            self.board[piece_row_value][piece_column_value] = key
+            for piece in pieces:
+                if piece.num == key:
+                    (row, column) = value
+                    piece.position = value
+                    self.board[row][column] = piece
+        
+        for row in self.board:
+            print(row)
+
+    def is_puzzle_completed(self, board):
+        completed_puzzle_list = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, ' ']]
+
+        if board == completed_puzzle_list:
+            return True
+        else:
+            return False
 
 class GamePiece():
 

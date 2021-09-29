@@ -1,18 +1,18 @@
 import unittest
 import classes
-from main import generate_pieces, generate_board
+from main import generate_pieces
 
 class TestGameMethods(unittest.TestCase):
 
     def setUp(self):
         pieces = generate_pieces()
-        board = generate_board(pieces)
-        self.game = classes.Game(board)
+        self.pieces = pieces
+        self.game = classes.Game()
+        self.game.generate_board(pieces)
         self.game.create_piece_dictionary(pieces)
         self.game_piece = classes.GamePiece(2, (1, 1))
         self.game_piece_above = classes.GamePiece(2, (2, 3))
         self.game_piece_left = classes.GamePiece(2, (3, 2))
-        self.game.update_board()
 
     def test_game_class_exists(self):
         self.assertIsNotNone(self.game)
@@ -83,6 +83,13 @@ class TestGameMethods(unittest.TestCase):
         except:
             returned_value = False
         self.assertTrue(returned_value)
+    
+    def test_puzzle_is_not_completed(self):
+        self.assertFalse(self.game.is_puzzle_completed(self.game.board))
 
+    def test_puzzle_is_completed(self):
+        self.game.board = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, ' ']]
+        self.assertTrue(self.game.is_puzzle_completed(self.game.board))
+        
 if __name__ == '__main__':
     unittest.main(verbosity=2)
