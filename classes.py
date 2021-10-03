@@ -26,7 +26,7 @@ class Game():
         open_space_position = self.piece_dictionary[' ']
         piece_position = self.piece_dictionary[piece.num]
         if piece_position[0] == open_space_position[0]:
-            if piece_position[1] -1 == open_space_position[1]:
+            if piece_position[1] - 1 == open_space_position[1]:
                 return 'Left'
             elif piece_position[1] + 1 == open_space_position[1]:
                 return 'Right'
@@ -38,15 +38,34 @@ class Game():
         else:
             return 'Too Far'
 
+    def can_piece_move(self, piece):
+
+        open_space_position = self.piece_dictionary[' ']
+        print(open_space_position)
+        piece_position = self.piece_dictionary[piece.num]
+
+        if ((piece_position[0] + 1 == open_space_position[0] or piece_position[0] - 1 == open_space_position[0]) and 
+            (piece_position[1] + 1 == open_space_position[1] or piece_position[1] - 1 == open_space_position[1])):
+            return False
+        elif (piece_position[0] + 1 == open_space_position[0] or 
+            piece_position[0] - 1 == open_space_position[0] or
+            piece_position[1] + 1 == open_space_position[1] or
+            piece_position[1] - 1 == open_space_position[1]):
+            return True
+        else:
+            return False
+
     def move_piece(self, piece):
-        open_space_direction = self.find_open_space_direction(piece)
+        open_space_direction = self.can_piece_move(piece)
         temp_open_space_position = self.piece_dictionary[' ']
         piece_position = self.piece_dictionary[piece.num]
-        if open_space_direction != 'Too Far':
+        if open_space_direction is True:
             self.piece_dictionary[' '] = piece_position
             self.piece_dictionary[piece.num] = temp_open_space_position
+            return True
         else:
             print('That piece is not next to the open space. Please choose a different piece.')
+            return False
     
     def generate_board(self, pieces):
 
@@ -77,10 +96,23 @@ class Game():
         for row in self.board:
             print(row)
 
-    def is_puzzle_completed(self, board):
-        completed_puzzle_list = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, ' ']]
-
-        if board == completed_puzzle_list:
+    def is_puzzle_completed(self):
+        if (self.piece_dictionary[1] == (0, 0) and 
+            self.piece_dictionary[2] == (0, 1) and
+            self.piece_dictionary[3] == (0, 2) and
+            self.piece_dictionary[4] == (0, 3) and
+            self.piece_dictionary[5] == (1, 0) and
+            self.piece_dictionary[6] == (1, 1) and
+            self.piece_dictionary[7] == (1, 2) and
+            self.piece_dictionary[8] == (1, 3) and
+            self.piece_dictionary[9] == (2, 0) and
+            self.piece_dictionary[10] == (2, 1) and
+            self.piece_dictionary[11] == (2, 2) and
+            self.piece_dictionary[12] == (2, 3) and
+            self.piece_dictionary[13] == (3, 0) and
+            self.piece_dictionary[14] == (3, 1) and
+            self.piece_dictionary[15] == (3, 2) and
+            self.piece_dictionary[' '] == (3, 3)):
             return True
         else:
             return False

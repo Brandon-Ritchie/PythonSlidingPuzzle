@@ -1,4 +1,10 @@
-from typing import ValuesView
+"""
+Found bugs:
+
+Game is not always solveable
+
+"""
+
 import classes
 import random
 
@@ -35,14 +41,15 @@ if __name__ == '__main__':
         game.create_piece_dictionary(pieces)
 
         valid_rows_and_columns = [1, 2, 3, 4]
-
-        puzzle_completed = False
         
         for row in game.board:
                 print(row)
 
-        while puzzle_completed is False:
-
+        while True:
+            if game.is_puzzle_completed() is True:
+                break
+            
+            print('The puzzle is completed: ' + str(game.is_puzzle_completed()))
             print('Choose the row of the piece you want to move:')
             chosen_row = input()
             
@@ -56,8 +63,6 @@ if __name__ == '__main__':
 
                 game.update_board(pieces)
 
-                if game.is_puzzle_completed(game.board) == True:
-                    puzzle_completed = True
             except:
                 print('Invalid move. Please enter numbers between 1 and 4!')
                 

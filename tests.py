@@ -10,9 +10,7 @@ class TestGameMethods(unittest.TestCase):
         self.game = classes.Game()
         self.game.generate_board(pieces)
         self.game.create_piece_dictionary(pieces)
-        self.game_piece = classes.GamePiece(2, (1, 1))
-        self.game_piece_above = classes.GamePiece(2, (2, 3))
-        self.game_piece_left = classes.GamePiece(2, (3, 2))
+        self.test_piece = classes.GamePiece(2, (1, 1))
 
     def test_game_class_exists(self):
         self.assertIsNotNone(self.game)
@@ -33,10 +31,10 @@ class TestGameMethods(unittest.TestCase):
             self.assertTrue(len(row) == 4)
 
     def test_game_piece_class_exists(self):
-        self.assertIsNotNone(self.game_piece)
+        self.assertIsNotNone(self.test_piece)
 
     def test_game_piece_position_returns_tuple(self):
-        self.assertEqual(self.game_piece.position, (1, 1))
+        self.assertEqual(self.test_piece.position, (1, 1))
     
     def test_game_has_piece_dict(self):
         self.assertIsNotNone(self.game._piece_dictionary)
@@ -47,49 +45,84 @@ class TestGameMethods(unittest.TestCase):
     def test_game_piece_dictionary_has_1_to_15(self):
         for i in range(1, 16):
             self.assertIn(i, self.game.piece_dictionary)
-
-    def test_open_game_piece_is_below(self):
-        move_piece_return = self.game.find_open_space_direction(self.game_piece_above)
-        self.assertEqual(move_piece_return, 'Below')
-
-    def test_open_game_piece_is_right(self):
-        move_piece_return = self.game.find_open_space_direction(self.game_piece_left)
-        self.assertEqual(move_piece_return, 'Right')
-    
-    def test_open_game_piece_too_far(self):
-        move_piece_return = self.game.find_open_space_direction(self.game_piece)
-        self.assertEqual(move_piece_return, 'Too Far')
     
     def test_move_piece_open_piece_is_below(self):
-        returned_value = True
-        try:
-            self.game.move_piece(self.game_piece_above)
-        except:
-            returned_value = False
+        self.game.piece_dictionary[' '] = (2, 1)
+        self.game.piece_dictionary[self.test_piece.num] = self.test_piece.position
+        returned_value = self.game.move_piece(self.test_piece)
+        self.assertTrue(returned_value)
+    
+    def test_move_piece_open_piece_is_above(self):
+        self.game.piece_dictionary[' '] = (0, 1)
+        self.game.piece_dictionary[self.test_piece.num] = self.test_piece.position
+        returned_value = self.game.move_piece(self.test_piece)
         self.assertTrue(returned_value)
     
     def test_move_piece_open_piece_is_right(self):
-        returned_value = True
-        try:
-            self.game.move_piece(self.game_piece_left)
-        except:
-            returned_value = False
+        self.game.piece_dictionary[' '] = (1, 2)
+        self.game.piece_dictionary[self.test_piece.num] = self.test_piece.position
+        returned_value = self.game.move_piece(self.test_piece)
         self.assertTrue(returned_value)
 
+    def test_move_piece_open_piece_is_left(self):
+        self.game.piece_dictionary[' '] = (1, 0)
+        self.game.piece_dictionary[self.test_piece.num] = self.test_piece.position
+        returned_value = self.game.move_piece(self.test_piece)
+        self.assertTrue(returned_value)
+    
+    def test_move_piece_open_piece_is_diagonal(self):
+        self.game.piece_dictionary[' '] = (0, 0)
+        self.game.piece_dictionary[self.test_piece.num] = self.test_piece.position
+        returned_value = self.game.move_piece(self.test_piece)
+        self.assertFalse(returned_value)
+
     def test_move_piece_too_far(self):
+        self.game.piece_dictionary[self.test_piece.num] = self.test_piece.position
+        returned_value = self.game.move_piece(self.test_piece)
+        self.assertFalse(returned_value)
+    
+    def test_puzzle_is_not_completed(self):
+        self.assertFalse(self.game.is_puzzle_completed())
+
+    def test_puzzle_is_completed(self):
+        self.game.piece_dictionary[1] = (0, 0)
+        self.game.piece_dictionary[2] = (0, 1)
+        self.game.piece_dictionary[3] = (0, 2)
+        self.game.piece_dictionary[4] = (0, 3)
+        self.game.piece_dictionary[5] = (1, 0)
+        self.game.piece_dictionary[6] = (1, 1)
+        self.game.piece_dictionary[7] = (1, 2)
+        self.game.piece_dictionary[8] = (1, 3)
+        self.game.piece_dictionary[9] = (2, 0)
+        self.game.piece_dictionary[10] = (2, 1)
+        self.game.piece_dictionary[11] = (2, 2)
+        self.game.piece_dictionary[12] = (2, 3)
+        self.game.piece_dictionary[13] = (3, 0)
+        self.game.piece_dictionary[14] = (3, 1)
+        self.game.piece_dictionary[15] = (3, 2)
+        self.game.piece_dictionary[' '] = (3, 3)
+
+        self.assertTrue(self.game.is_puzzle_completed())
+
+    def test_can_piece_move_function_exists(self):
         returned_value = True
         try:
-            self.game.move_piece(self.game_piece)
+            self.game.can_piece_move(self.test_piece)
         except:
             returned_value = False
         self.assertTrue(returned_value)
     
-    def test_puzzle_is_not_completed(self):
-        self.assertFalse(self.game.is_puzzle_completed(self.game.board))
-
-    def test_puzzle_is_completed(self):
-        self.game.board = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, ' ']]
-        self.assertTrue(self.game.is_puzzle_completed(self.game.board))
+    # def test_can_piece_move_piece_above(self):
+    #     self.game.piece_dictionary[self.game_piece_above.num] = self.game_piece_above.position
+    #     self.assertTrue(self.game.can_piece_move(self.game_piece_above))
         
+    # def test_can_piece_move_piece_left(self):
+    #     self.game.piece_dictionary[self.game_piece_left.num] = self.game_piece_left.position
+    #     self.assertTrue(self.game.can_piece_move(self.game_piece_left))
+
+    # def test_can_piece_move_return_false(self):
+    #     self.game.piece_dictionary[self.game_piece.num] = self.game_piece.position
+    #     self.assertFalse(self.game.can_piece_move(self.game_piece))
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
