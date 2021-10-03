@@ -70,8 +70,26 @@ class TestGameMethods(unittest.TestCase):
         returned_value = self.game.move_piece(self.test_piece)
         self.assertTrue(returned_value)
     
-    def test_move_piece_open_piece_is_diagonal(self):
+    def test_move_piece_open_piece_is_above_left_diagonal(self):
         self.game.piece_dictionary[' '] = (0, 0)
+        self.game.piece_dictionary[self.test_piece.num] = self.test_piece.position
+        returned_value = self.game.move_piece(self.test_piece)
+        self.assertFalse(returned_value)
+    
+    def test_move_piece_open_piece_is_above_right_diagonal(self):
+        self.game.piece_dictionary[' '] = (0, 2)
+        self.game.piece_dictionary[self.test_piece.num] = self.test_piece.position
+        returned_value = self.game.move_piece(self.test_piece)
+        self.assertFalse(returned_value)
+
+    def test_move_piece_open_piece_is_below_left_diagonal(self):
+        self.game.piece_dictionary[' '] = (2, 0)
+        self.game.piece_dictionary[self.test_piece.num] = self.test_piece.position
+        returned_value = self.game.move_piece(self.test_piece)
+        self.assertFalse(returned_value)
+
+    def test_move_piece_open_piece_is_below_right_diagonal(self):
+        self.game.piece_dictionary[' '] = (2, 2)
         self.game.piece_dictionary[self.test_piece.num] = self.test_piece.position
         returned_value = self.game.move_piece(self.test_piece)
         self.assertFalse(returned_value)
@@ -111,18 +129,6 @@ class TestGameMethods(unittest.TestCase):
         except:
             returned_value = False
         self.assertTrue(returned_value)
-    
-    # def test_can_piece_move_piece_above(self):
-    #     self.game.piece_dictionary[self.game_piece_above.num] = self.game_piece_above.position
-    #     self.assertTrue(self.game.can_piece_move(self.game_piece_above))
-        
-    # def test_can_piece_move_piece_left(self):
-    #     self.game.piece_dictionary[self.game_piece_left.num] = self.game_piece_left.position
-    #     self.assertTrue(self.game.can_piece_move(self.game_piece_left))
-
-    # def test_can_piece_move_return_false(self):
-    #     self.game.piece_dictionary[self.game_piece.num] = self.game_piece.position
-    #     self.assertFalse(self.game.can_piece_move(self.game_piece))
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
